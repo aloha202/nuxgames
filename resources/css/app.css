@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.button {
+    padding: 5px 10px;
+}
+
+
+.page {
+    min-width: 400px;
+}
+
+
+.block {
+    margin: 10px;
+}
+
+button a{
+
+}
