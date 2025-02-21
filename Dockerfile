@@ -28,6 +28,7 @@ COPY . .
 
 # Make sure the database file exists
 RUN mkdir -p database && touch database/database.sqlite
+RUN cp .env.example .env
 
 # Expose port
 EXPOSE 8000
