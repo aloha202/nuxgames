@@ -81,24 +81,14 @@ class MainController extends Controller
     {
         $randomNumber = random_int(1, 1000);
 
-        $success = $randomNumber % 2 === 0;
+        $success = $this->isSuccess($randomNumber);
         $result = 'failed';
         $message = sprintf('Lose - %s', $randomNumber);
 
         $sum = null;
 
         if ($success) {
-            $sum = $randomNumber * 0.1;
-            if ($randomNumber > 300) {
-                $sum = $randomNumber * 0.3;
-            }
-            if ($randomNumber > 600) {
-                $sum = $randomNumber * 0.5;
-            }
-            if ($randomNumber > 900) {
-                $sum = $randomNumber * 0.7;
-            }
-            $sum = number_format($sum, 2, '.', '');
+            $sum = $this->getSum($randomNumber);
             $result = 'success';
             $message = sprintf('Win - %s - $%s', $randomNumber, $sum);
         }
@@ -119,5 +109,41 @@ class MainController extends Controller
     {
         $histories = History::whereUserId(Auth::id())->orderByDesc('created_at')->limit(3)->get();
         return view('history', ['histories' => $histories]);
+    }
+
+    /**
+     * @param int $randomNumber
+     * @return string
+     * @php-tt-assert 200 >>> '20.00'
+     * @php-tt-assert 400 >>> '120.00'
+     * @php-tt-assert 700 >>> '350.00'
+     * @php-tt-assert 1000 >>> '700.00'
+ */
+    protected function getSum(int $randomNumber): string
+    {
+        $sum = $randomNumber * 0.1;
+        if ($randomNumber > 300) {
+            $sum = $randomNumber * 0.3;
+        }
+        if ($randomNumber > 600) {
+            $sum = $randomNumber * 0.5;
+        }
+        if ($randomNumber > 900) {
+            $sum = $randomNumber * 0.7;
+        }
+        $sum = number_format($sum, 2, '.', '');
+
+        return $sum;
+    }
+
+    /**
+     * @param int $randomNumber
+     * @return bool
+     * @php-tt-assert 51 >>> false
+     * @php-tt-assert 2222 >>> true
+     */
+    protected function isSuccess(int $randomNumber): bool
+    {
+        return $randomNumber % 2 === 0;
     }
 }
